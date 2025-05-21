@@ -1,0 +1,5 @@
+com\biblioteca\controlador\LivroControlador.class
+com\biblioteca\repositorio\LivroRepositorio.class
+com\biblioteca\BibliotecaAplicacao.class
+com\biblioteca\modelo\Livro.class
+com\biblioteca\servico\LivroServico.class

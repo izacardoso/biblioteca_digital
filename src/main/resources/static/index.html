@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Biblioteca Digital</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f8f9fa;
+    }
+    h1 {
+      color: #343a40;
+    }
+    input, button {
+      padding: 10px;
+      margin: 5px 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+    th {
+      background-color: #e9ecef;
+    }
+  </style>
+</head>
+<body>
+<h1>Biblioteca Digital</h1>
+
+<h2>Cadastrar novo livro</h2>
+<input type="text" id="titulo" placeholder="Título" required>
+<input type="text" id="autor" placeholder="Autor" required>
+<button onclick="cadastrarLivro()">Cadastrar</button>
+
+<h2>Lista de Livros</h2>
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Título</th>
+    <th>Autor</th>
+  </tr>
+  </thead>
+  <tbody id="livrosTable">
+  </tbody>
+</table>
+
+<script>
+  const API_URL = "http://localhost:8080/livros";
+
+  function listarLivros() {
+    fetch(API_URL)
+      .then(response => response.json())
+      .then(data => {
+        const table = document.getElementById("livrosTable");
+        table.innerHTML = "";
+        data.forEach(livro => {
+          const row = `<tr><td>${livro.id}</td><td>${livro.titulo}</td><td>${livro.autor}</td></tr>`;
+          table.innerHTML += row;
+        });
+      });
+  }
+
+  function cadastrarLivro() {
+    const titulo = document.getElementById("titulo").value.trim();
+    const autor = document.getElementById("autor").value.trim();
+
+    if (!titulo || !autor) {
+      alert("Preencha todos os campos!");
+      return;
+    }
+
+    const livro = { titulo, autor };
+
+    fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(livro)
+    })
+    .then(response => {
+      if (response.ok) {
+        document.getElementById("titulo").value = "";
+        document.getElementById("autor").value = "";
+        listarLivros();
+      } else {
+        alert("Erro ao cadastrar livro.");
+      }
+    });
+  }
+
+  // Carrega os livros ao abrir a página
+  listarLivros();
+</script>
+</body>
+</html>
